@@ -58,15 +58,16 @@ export class PoolFilters {
 			return true;
 		}
 
-		const result = await Promise.all(this.filters.map((f) => f.execute(poolKeys)));
-		const pass = result.every((r) => r.ok);
+		const stages = await Promise.all(this.filters.map((f) => f.execute(poolKeys)));
+		const pass = stages.every((r) => r.ok);
+
+		logger.warn(`\n`);
+		for (const stage of stages) {
+			logger.warn(`[${stage.ok ? "OK" : "NG"}]_${stage.message}`);
+		}
 
 		if (pass) {
 			return true;
-		}
-
-		for (const filterResult of result.filter((r) => !r.ok)) {
-			logger.trace(filterResult.message);
 		}
 
 		return false;

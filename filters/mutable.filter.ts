@@ -30,7 +30,7 @@ export class MutableFilter implements Filter {
       const metadataAccount = await this.connection.getAccountInfo(metadataPDA.publicKey, this.connection.commitment);
 
       if (!metadataAccount?.data) {
-        return { ok: false, message: 'Mutable -> Failed to fetch account data' };
+        return { ok: false, message: '[Mutable] -> Failed to fetch account data' };
       }
 
       const deserialize = this.metadataSerializer.deserialize(metadataAccount.data);
@@ -47,14 +47,14 @@ export class MutableFilter implements Filter {
         message.push('has no socials');
       }
 
-      return { ok: ok, message: ok ? undefined : `MutableSocials [${ok ? 'OK' : 'NG'}] -> Token ${message.join(' and ')}` };
+      return { ok: ok, message: `[MutableSocials] -> Token ${message.join(' and ')}` };
     } catch (e) {
-      logger.error({ mint: poolKeys.baseMint }, `MutableSocials -> Failed to check ${this.errorMessage.join(' and ')}`);
+      logger.error({ mint: poolKeys.baseMint }, `[MutableSocials] -> Failed to check ${this.errorMessage.join(' and ')}`);
     }
 
     return {
       ok: false,
-      message: `MutableSocials -> Failed to check ${this.errorMessage.join(' and ')}`,
+      message: `[MutableSocials] -> Failed to check ${this.errorMessage.join(' and ')}`,
     };
   }
 

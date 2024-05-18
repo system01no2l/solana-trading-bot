@@ -187,7 +187,7 @@ export class Bot {
                     );
                 } catch (error: any) {
                     const _errorType = error.type;
-                    logger.debug({ mint: poolState.baseMint.toString(), error: _errorType}, `Error confirming buy transaction`);
+                    logger.debug({ mint: poolState.baseMint.toString(), error: _errorType }, `Error confirming buy transaction`);
                 }
             }
         } catch (error) {
@@ -354,12 +354,12 @@ export class Bot {
     }
 
     private async filterMatch(poolKeys: LiquidityPoolKeysV4) {
+        // Không cần kiểm tra
         if (this.config.filterCheckInterval === 0 || this.config.filterCheckDuration === 0) {
             return true;
         }
 
         const timesToCheck = this.config.filterCheckDuration / this.config.filterCheckInterval;
-        console.log('timesToCheck', timesToCheck);
         let timesChecked = 0;
         let matchCount = 0;
 
@@ -370,7 +370,9 @@ export class Bot {
                 if (shouldBuy) {
                     matchCount++;
 
+                    // vượt qua bao nhiêu tiêu chí mua thì có thể mua
                     if (this.config.consecutiveMatchCount <= matchCount) {
+                        logger.debug(`\n`);
                         logger.debug(
                             { mint: poolKeys.baseMint.toString() },
                             `Filter match ${matchCount}/${this.config.consecutiveMatchCount}`,
@@ -380,7 +382,9 @@ export class Bot {
                 } else {
                     matchCount = 0;
                 }
-
+                if (this.config.filterCheckInterval > 1) {
+                    logger.trace(`${timesChecked + 1}/${timesToCheck} Filter didn't match, waiting for ${this.config.filterCheckInterval} ms.`);
+                }
                 await sleep(this.config.filterCheckInterval);
             } finally {
                 timesChecked++;
