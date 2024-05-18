@@ -18,6 +18,7 @@ const transport = pino.transport({
             options: {},
         },
     ]
+    
 });
 
 export const logger = pino(
