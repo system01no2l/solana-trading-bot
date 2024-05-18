@@ -29,9 +29,10 @@ export class RenouncedFreezeFilter implements Filter {
       }
 
       const deserialize = MintLayout.decode(accountInfo.data);
-      const renounced = !this.checkRenounced || deserialize.mintAuthorityOption === 0;
-      const freezable = !this.checkFreezable || deserialize.freezeAuthorityOption !== 0;
+      const renounced = !this.checkRenounced || (deserialize.mintAuthorityOption === 0);
+      const freezable = this.checkFreezable && (deserialize.freezeAuthorityOption !== 0);
       const ok = renounced && !freezable;
+
       const message: string[] = [];
 
       if (!renounced) {
@@ -42,7 +43,7 @@ export class RenouncedFreezeFilter implements Filter {
         message.push('freeze');
       }
 
-      return { ok: ok, message: ok ? undefined : `RenouncedFreeze -> Creator can ${message.join(' and ')} tokens` };
+      return { ok: ok, message: ok ? undefined : `RenouncedFreeze [${ok ? 'OK' : 'NG'}] -> Creator can ${message.join(' and ')} tokens` };
     } catch (e) {
       logger.error(
         { mint: poolKeys.baseMint },
