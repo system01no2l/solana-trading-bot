@@ -65,3 +65,8 @@ export const USE_SNIPE_LIST = retrieveEnvVariable('USE_SNIPE_LIST', logger) === 
 export const SNIPE_LIST_REFRESH_INTERVAL = Number(retrieveEnvVariable('SNIPE_LIST_REFRESH_INTERVAL', logger));
 export const TOP_10_MAX = 10;
 export const CHECK_TOP_HOLDER = true;
+export const TOPHOLDER_NUM = 10;
+
+export const CHECK_IF_RUG = retrieveEnvVariable('CHECK_IF_RUG', logger) === 'true';
+export const CHECK_GMGN = retrieveEnvVariable('CHECK_GMGN', logger) === 'true';
+export const CHECK_RATS = retrieveEnvVariable('CHECK_RATS', logger) === 'true';

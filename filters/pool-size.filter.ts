@@ -1,4 +1,4 @@
-import { Filter, FilterResult } from './pool-filters';
+import { Filter, FilterResult,  PoolFilterArgs } from './interface.filter';
 import { LiquidityPoolKeysV4, Token, TokenAmount } from '@raydium-io/raydium-sdk';
 import { Connection } from '@solana/web3.js';
 import { logger } from '../helpers';

@@ -16,7 +16,7 @@ import {
 } from '@solana/spl-token';
 import { Liquidity, LiquidityPoolKeysV4, LiquidityStateV4, Percent, Token, TokenAmount } from '@raydium-io/raydium-sdk';
 import { MarketCache, PoolCache, SnipeListCache } from './cache';
-import { PoolFilters } from './filters';
+import { PoolFilters, BuyFilters } from './filters';
 import { TransactionExecutor } from './transactions';
 import { createPoolKeys, logger, NETWORK, sleep } from './helpers';
 import { Semaphore } from 'async-mutex';
@@ -140,6 +140,19 @@ export class Bot {
                     logger.trace({ mint: poolKeys.baseMint.toString() }, `Skipping buy because pool doesn't match filters`);
                     return;
                 }
+            }
+
+            const buyFilters = new BuyFilters(this.connection, {
+                quoteToken: this.config.quoteToken,
+                minPoolSize: this.config.minPoolSize,
+                maxPoolSize: this.config.maxPoolSize,
+            });
+
+            const match = await buyFilters.execute(poolKeys);
+
+            if (match) {
+                logger.trace({ mint: poolKeys.baseMint.toString() }, `Token doesnt meet buy requirements`);
+                return true;
             }
 
             const timeBuy = new Date().getTime();

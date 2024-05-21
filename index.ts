@@ -46,6 +46,9 @@ import {
     FILTER_CHECK_DURATION,
     CONSECUTIVE_FILTER_MATCHES,
     CHECK_IF_SOCIALS,
+    CHECK_IF_RUG,
+    CHECK_GMGN,
+    CHECK_RATS,
 } from './helpers';
 import { version } from './package.json';
 import { WarpTransactionExecutor } from './transactions/warp-transaction-executor';
@@ -129,6 +132,10 @@ function printDetails(wallet: Keypair, quoteToken: Token, bot: Bot) {
         logger.info(`Check burned: ${botConfig.checkBurned}`);
         logger.info(`Check mutable: ${CHECK_IF_MUTABLE}`);
         logger.info(`Check socials: ${CHECK_IF_SOCIALS}`);
+
+        logger.info(`Check Rat owners: ${CHECK_RATS}`);
+        logger.info(`GMGN Degen Audit: ${CHECK_GMGN}`);
+        logger.info(`RugCheck: ${CHECK_IF_RUG}`);
 
         logger.info(`Min pool size: ${botConfig.minPoolSize.toFixed()}`);
         logger.info(`Max pool size: ${botConfig.maxPoolSize.toFixed()}`);

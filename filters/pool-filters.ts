@@ -5,29 +5,19 @@ import { BurnFilter } from './burn.filter';
 import { MutableFilter } from './mutable.filter';
 import { RenouncedFreezeFilter } from './renounced.filter';
 import { PoolSizeFilter } from './pool-size.filter';
-import { 
-	CHECK_IF_BURNED, 
-	CHECK_IF_FREEZABLE, 
-	CHECK_IF_MINT_IS_RENOUNCED, 
-	CHECK_IF_MUTABLE, 
+import { RiskLevelFilter } from './risk-level.filter';
+
+import { Filter, FilterResult,  PoolFilterArgs } from './interface.filter';
+
+import {
+	CHECK_IF_BURNED,
+	CHECK_IF_FREEZABLE,
+	CHECK_IF_MINT_IS_RENOUNCED,
+	CHECK_IF_MUTABLE,
 	CHECK_IF_SOCIALS,
-	CHECK_TOP_HOLDER,
-	logger } from '../helpers';
-
-export interface Filter {
-	execute(poolKeysV4: LiquidityPoolKeysV4): Promise<FilterResult>;
-}
-
-export interface FilterResult {
-	ok: boolean;
-	message?: string;
-}
-
-export interface PoolFilterArgs {
-	minPoolSize: TokenAmount;
-	maxPoolSize: TokenAmount;
-	quoteToken: Token;
-}
+	CHECK_IF_RUG,
+	logger
+} from '../helpers';
 
 export class PoolFilters {
 	private readonly filters: Filter[] = [];
@@ -50,6 +40,11 @@ export class PoolFilters {
 
 		if (!args.minPoolSize.isZero() || !args.maxPoolSize.isZero()) {
 			this.filters.push(new PoolSizeFilter(connection, args.quoteToken, args.minPoolSize, args.maxPoolSize));
+		}
+
+		// check risk level
+		if (CHECK_IF_RUG) {
+			this.filters.push(new RiskLevelFilter(connection));
 		}
 	}
 
